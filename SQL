@@ -1,0 +1,57 @@
+-- 1.Consulta de filmes e suas categorias:
+
+SELECT filme.titulo AS Title, categoria.nome AS Category
+FROM filme
+JOIN filme_categoria ON filme.id_filme = filme_categoria.id_filme
+JOIN categoria ON filme_categoria.id_categoria = categoria.id_categoria;
+
+-- 2.Consulta de atores e o número de filmes em que participaram:
+
+SELECT ator.nome, ator.sobrenome, COUNT(participacao.id_filme) AS TotalFilmes
+FROM ator
+LEFT JOIN filme_ator AS participacao ON ator.id_ator = participacao.id_ator
+GROUP BY ator.id_ator
+ORDER BY TotalFilmes DESC;
+
+-- 3.Consulta de atores em filmes com mais de duas horas de duração:
+
+SELECT ator.nome, ator.sobrenome, COUNT(filme.id_filme) AS TotalFilmes
+FROM ator
+JOIN filme_ator ON ator.id_ator = filme_ator.id_ator
+JOIN filme ON filme_ator.id_filme = filme.id_filme
+WHERE filme.duracao > 120
+GROUP BY ator.id_ator
+ORDER BY TotalFilmes DESC;
+
+-- Exercício 2:
+-- 1.Contagem de registros para filmes e categorias:
+
+SELECT COUNT(*) AS Total
+FROM (
+    SELECT filme.titulo, categoria.nome
+    FROM filme
+    JOIN filme_categoria ON filme.id_filme = filme_categoria.id_filme
+    JOIN categoria ON filme_categoria.id_categoria = categoria.id_categoria
+) AS Resultado;
+
+-- 2.Contagem de registros para atores e número de filmes:
+
+SELECT COUNT(*) AS Total
+FROM (
+    SELECT ator.nome, ator.sobrenome, COUNT(participacao.id_filme)
+    FROM ator
+    LEFT JOIN filme_ator AS participacao ON ator.id_ator = participacao.id_ator
+    GROUP BY ator.id_ator
+) AS AtorFilmes;
+
+-- 3.Contagem de registros para atores em filmes de longa duração:
+
+SELECT COUNT(*) AS Total
+FROM (
+    SELECT ator.nome, ator.sobrenome, COUNT(filme.id_filme)
+    FROM ator
+    JOIN filme_ator ON ator.id_ator = filme_ator.id_ator
+    JOIN filme ON filme_ator.id_filme = filme.id_filme
+    WHERE filme.duracao > 120
+    GROUP BY ator.id_ator
+) AS LongosFilmes;
